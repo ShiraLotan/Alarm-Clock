@@ -1,5 +1,10 @@
 body {
-  margin: 0;
+  background-image: url('https://ak7.picdn.net/shutterstock/videos/13309817/thumb/1.jpg');
+  background-repeat: no-repeat;
+  background-position: center; 
+  background-size: 1400px 1000px;
+  background-position-y: -5px;
+  background-color: black;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -10,4 +15,30 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+.clock{
+  font-size: 40px; 
+  border: 3px solid black;
+  width: 300px;
+  margin: auto;
+  border-radius: 30px;
+  animation:pulse 0.5s infinite alternate;
+  background-color: rgb(227, 229, 231)
+}
+
+@keyframes pulse {
+  from { box-shadow:0px 0px 10px 3px #0066cc; }
+  to { box-shadow:0px 0px 20px 5px #0066cc; }
+}
+.setBtn
+{
+  margin: 20px !important;
+}
+.settingModal{
+  height: 700px !important;
+}
+.inpModal{
+  width: 98%;
+  height: 50px;
+  font-size: 30px;
 }

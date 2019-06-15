@@ -49,6 +49,26 @@ const DialogActions = withStyles(theme => ({
 }))(MuiDialogActions);
 
 class Alarm extends React.Component {
+componentDidMount()
+{
+ var saveAlarm = JSON.parse(localStorage.getItem('alarm'))
+ if(saveAlarm!==null)
+ {
+  let mutateDate = saveAlarm.date
+  let newDate=mutateDate.slice(0,10)
+  let newDate1= newDate.split('-')
+  let newDate2 = newDate1.map(d=> d.startsWith('0') ? d.substring(1): d)
+  let newDate3 = `${newDate2[2]}${newDate2[1]}${newDate2[0]}`
+
+   this.setState({
+      hours:saveAlarm.hours,
+      minutes: saveAlarm.minutes,
+      storageDate: newDate3
+   })
+   this.props.check(saveAlarm.hours, saveAlarm.minutes,newDate3)
+ }
+}
+
   state = {
     open: false,
     hours:'',
@@ -68,7 +88,19 @@ class Alarm extends React.Component {
   };
 
   handleClose = () => {
-    this.props.check(this.state.hours, this.state.minutes,this.state.date)
+    const forStorage = {
+                      hours:this.state.hours,
+                      minutes: this.state.minutes,
+                      date: this.state.date
+                    }
+    localStorage.setItem('alarm',JSON.stringify(forStorage))
+
+    let alarmDay=this.state.date.getDate()
+    let alarmMonth=this.state.date.getMonth()
+    let alarmYear=this.state.date.getFullYear()
+    let alarmFull = `${alarmDay}${alarmMonth}${alarmYear}`
+
+    this.props.check(this.state.hours, this.state.minutes,alarmFull)
     this.setState({ open: false });
   };
 
@@ -96,11 +128,12 @@ class Alarm extends React.Component {
   render() {
     return (
       <div>
-        {this.state.hours!=='' ? <span>{this.state.hours}:</span>: null}{this.state.minutes!=='' ? <span>{this.state.minutes}</span>: null}
-        <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
+       
+        <Button className='setBtn' variant="outlined" color="secondary" onClick={this.handleClickOpen}>
           Set Alarm Clock
         </Button>
-        <Dialog
+        <div className='clock'> {this.state.hours!=='' ? <span>{this.state.hours}:</span>: null}{this.state.minutes!=='' ? <span>{this.state.minutes}</span>: null}</div>
+        <Dialog className='settingModal'
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
@@ -110,7 +143,7 @@ class Alarm extends React.Component {
           </DialogTitle>
           <DialogContent dividers>
             <Typography gutterBottom>
-              <input name="alarm" onChange={this.saveData.bind(this)} type="time" min="00:00" max="23:59"/>
+              <input className='inpModal' name="alarm" onChange={this.saveData.bind(this)} type="time" min="00:00" max="23:59"/>
              
             </Typography>
             <Calendar

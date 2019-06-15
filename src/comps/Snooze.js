@@ -84,9 +84,9 @@ class Snooze extends React.Component {
   render() {
     return (
       <div>
-        <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
+        {/* <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
           Open dialog
-        </Button>
+        </Button> */}
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
