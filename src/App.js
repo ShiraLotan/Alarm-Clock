@@ -63,7 +63,7 @@ class App extends React.Component{
   checkAlarm(hours,minutes, date)
   {
     console.log(date)
-    intervalID =  setInterval(() => {
+    window.intervalID =  setInterval(() => {
 
     console.log('interval')
     let dateNow= new Date()
@@ -99,7 +99,7 @@ class App extends React.Component{
   cancelAlerm()
   {
     console.log('End interval')
-      clearInterval(intervalID)
+      clearInterval(window.intervalID)
   }
 
  
