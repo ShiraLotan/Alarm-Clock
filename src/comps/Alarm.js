@@ -68,6 +68,7 @@ class Alarm extends React.Component {
   };
 
   handleClose = () => {
+    this.props.check(this.state.hours, this.state.minutes,this.state.date)
     this.setState({ open: false });
   };
 
@@ -75,16 +76,11 @@ class Alarm extends React.Component {
   {
     let alarm = ev.target.value
     let timeArr = alarm.split(":")
-    let date = this.state.date
-
     timeArr.map((t,i)=> t.startsWith('0') ? timeArr[i]=t.substring(1) : null)
-
     this.setState({
         hours: timeArr[0],
         minutes: timeArr[1]
     })
-    
-    this.props.check(timeArr[0], timeArr[1],date)
   }
 
   cancelAlarm()

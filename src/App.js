@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 import Alarm from './comps/Alarm';
+import intervalID from './globalVar'
+import Snooze from './comps/Snooze';
 
 
 
@@ -10,8 +12,9 @@ class App extends React.Component{
               hours:'',
               minutes:''
             },
-    alarmTime: '',
+    alarmTime: false,
   };
+
 
   componentDidMount()
   {
@@ -36,7 +39,7 @@ class App extends React.Component{
         hours: this.state.currentTime.hours,
         minutes: currentMin
       }})
-    }, 1000);
+    }, 60000);
   }
 
   checkHourse(currentMin)
@@ -58,11 +61,24 @@ class App extends React.Component{
 
   checkAlarm(hours,minutes, date)
   {
-    console.log(date)
+    intervalID =  setInterval(() => {
 
-  let intervalID =  setInterval(() => {
     console.log('interval')
+    let dateNow= new Date()
 
+    let alarmDay=date.getDate()
+    let alarmMonth=date.getMonth()
+    let alarmYear=date.getFullYear()
+    let alarmFull = `${alarmDay}${alarmMonth}${alarmYear}`
+
+    let nowDay=dateNow.getDate()
+    let nowMonth=dateNow.getMonth()
+    let nowYear=dateNow.getFullYear()
+    let todayFull = `${nowDay}${nowMonth}${nowYear}`
+
+    if(alarmFull===todayFull)
+    {
+      console.log('date is the same now checking hour')
       let currentHour = this.state.currentTime.hours.toString();
       let currentMinute = this.state.currentTime.minutes.toString();
 
@@ -77,16 +93,16 @@ class App extends React.Component{
         currentHour=currentMinute.substring(1)
       }
 
-      currentHour=hours && currentMinute===minutes ? alert('alarm') : null;
+      currentHour=hours && currentMinute===minutes ? this.setState({alarmTime: true}): null;
     }
-    , 1000);
-    this.setState({intervalID:intervalID})
+  }, 20000)
+  
   }
 
   cancelAlerm()
   {
     console.log('End interval')
-      clearInterval(this.state.intervalID)
+      clearInterval(intervalID)
   }
 
  
@@ -95,7 +111,7 @@ class App extends React.Component{
     return <div className="App">
       <div>{this.state.currentTime.hours < 10 ? <span>0{this.state.currentTime.hours}</span>:<span>{this.state.currentTime.hours}</span>}:{this.state.currentTime.minutes<10 ? <span>0{this.state.currentTime.minutes}</span>: <span>{this.state.currentTime.minutes}</span>}</div>
       <Alarm check={this.checkAlarm.bind(this)} cancel={this.cancelAlerm.bind(this)}/>
-
+      {this.state.alarmTime===true ? <Snooze/> : null}
     </div>;
   }
 }
