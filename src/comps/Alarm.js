@@ -121,6 +121,7 @@ componentDidMount()
       hours: "",
       minutes: ""
     })
+    localStorage.clear()
     this.props.cancel()
     this.setState({ open: false });
   }
@@ -132,6 +133,7 @@ componentDidMount()
         <Button className='setBtn' variant="outlined" color="secondary" onClick={this.handleClickOpen}>
           Set Alarm Clock
         </Button>
+       
         <div className='clock'> {this.state.hours!=='' ? <span>{this.state.hours}:</span>: null}{this.state.minutes!=='' ? <span>{this.state.minutes}</span>: null}</div>
         <Dialog className='settingModal'
           onClose={this.handleClose}

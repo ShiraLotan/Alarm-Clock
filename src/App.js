@@ -1,9 +1,55 @@
 import React from 'react';
 import './App.css';
 import Alarm from './comps/Alarm';
-import intervalID from './globalVar'
-import Snooze from './comps/Snooze';
 import Container from '@material-ui/core/Container';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+
+
+const styles = theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)(props => {
+  const { children, classes, onClose } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles(theme => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles(theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
 
 
 
@@ -14,6 +60,7 @@ class App extends React.Component{
               minutes:''
             },
     alarmTime: false,
+    open: false
   };
 
 
@@ -43,6 +90,8 @@ class App extends React.Component{
     }, 60000);
   }
 
+  
+  
   checkHourse(currentMin)
   {
       if(currentMin === 60)
@@ -60,11 +109,10 @@ class App extends React.Component{
      }
   }
 
-  checkAlarm(hours,minutes, date)
+   checkAlarm(hours,minutes, date)
   {
-    console.log(date)
-    window.intervalID =  setInterval(() => {
-
+    window.intervalID = setInterval(() => {
+      
     console.log('interval')
     let dateNow= new Date()
 
@@ -90,19 +138,45 @@ class App extends React.Component{
         currentHour=currentMinute.substring(1)
       }
 
-      currentHour=hours && currentMinute===minutes ? this.setState({alarmTime: true}): null;
+      currentHour=hours && currentMinute===minutes ? this.setState({open:true}): null;
+
+
     }
   }, 20000)
-  
   }
 
-  cancelAlerm()
+   cancelAlerm()
   {
-    console.log('End interval')
-      clearInterval(window.intervalID)
+    for(var i=0;i<999;i++)
+    {
+      clearInterval(i)
+    }
+    this.componentDidMount()
   }
+  
+  handleClickOpen = () => {
+    this.setState({
+      open: true,
+    });
+  };
 
+  handleClose = () => {
+    localStorage.clear()
+    this.setState({ open: false });
+    clearTimeout(window.snooneInterval)
+    this.cancelAlerm()
+  };
  
+  snooozing()
+  {
+    this.setState({open: false})
+   window.snooneInterval=setTimeout(()=>{
+     this.cancelAlerm()
+      this.setState({open: true})
+      console.log('snooze')
+    },1000)
+  }
+  
 
   render() {
     return <div className="App">
@@ -110,8 +184,36 @@ class App extends React.Component{
         <h1>Alarm Clock</h1>
       <div className='clock'><div className='digits'>{this.state.currentTime.hours < 10 ? <span>0{this.state.currentTime.hours}</span>:<span>{this.state.currentTime.hours}</span>}:{this.state.currentTime.minutes<10 ? <span>0{this.state.currentTime.minutes}</span>: <span>{this.state.currentTime.minutes}</span>}</div></div>
       <Alarm check={this.checkAlarm.bind(this)} cancel={this.cancelAlerm.bind(this)}/>
-      {this.state.alarmTime===true ? <Snooze/> : null}
       </Container>
+
+ 
+  
+ 
+        
+        <Dialog
+          onClose={this.handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={this.state.open}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+          WAKE UP
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Time to wakeup!
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+                OK
+            </Button>
+            <Button onClick={this.snooozing.bind(this)} color="primary">
+                SNOOZE
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+      
     </div>;
   }
 }
