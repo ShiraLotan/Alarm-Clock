@@ -113,7 +113,6 @@ class App extends React.Component{
   {
     window.intervalID = setInterval(() => {
       
-    console.log('interval')
     let dateNow= new Date()
 
     let nowDay=dateNow.getDate()
@@ -123,7 +122,6 @@ class App extends React.Component{
 
     if(date===todayFull)
     {
-      console.log('date is the same now checking hour')
       let currentHour = this.state.currentTime.hours.toString();
       let currentMinute = this.state.currentTime.minutes.toString();
 
@@ -142,7 +140,7 @@ class App extends React.Component{
 
 
     }
-  }, 20000)
+  }, 10000)
   }
 
    cancelAlerm()
@@ -173,8 +171,7 @@ class App extends React.Component{
    window.snooneInterval=setTimeout(()=>{
      this.cancelAlerm()
       this.setState({open: true})
-      console.log('snooze')
-    },1000)
+    },10000)
   }
   
 
